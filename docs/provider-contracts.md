@@ -21,10 +21,11 @@ Every receipt has:
 
 Starts a governed workflow and extracts the demo dossier. Xano calls Nutrient DWS `/build` with the public HTTPS dossier URL and requests plain text, key-value pairs, and tables as structured JSON. The backend rejects the response unless all three expected pages and both conflicting SPF claims are present. A successful response contains the product identity, typed claims, source labels and pages, confidence, conflict status, and Xano/Nutrient receipts.
 
-Live Xano requires two server-side environment variables:
+Live Xano requires one server-side environment variable:
 
 - `NUTRIENT_API_KEY`: the private DWS bearer credential;
-- `BRANDPROOF_DOSSIER_URL`: the public HTTPS URL of `brandproof-demo-dossier.pdf` after static hosting.
+
+The non-secret synthetic dossier URL is pinned in XanoScript to the public GitHub Pages PDF so the exact input remains reproducible.
 
 ### `POST /brandproof/review`
 

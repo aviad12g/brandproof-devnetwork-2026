@@ -8,12 +8,12 @@ Built from scratch for the DevNetwork API + Cloud + AI Hackathon 2026. Implement
 
 - Product UI and governed workflow: implemented.
 - Permission-safe three-page synthetic source dossier: generated, render-verified, and linked from the product UI.
-- Stateful Xano tables, four API endpoints, and a fail-closed Nutrient extraction function: implemented locally and validated by the official XanoScript parser; not yet pushed.
+- Stateful Xano tables, four API endpoints, and a fail-closed Nutrient extraction function: deployed to Xano workspace `167554` and validated by the official XanoScript parser.
 - Workflow tests: passing.
 - Desktop and mobile visual checks: passing.
 - Local browser mode uses deterministic sponsor fixtures that are unmistakably labeled `Demo fixture`; the live Xano extraction path now requires and validates a real Nutrient DWS response.
-- Live sponsor calls: not yet authenticated or claimed.
-- Deployment and Devpost submission: not yet completed.
+- Live sponsor calls: the live Xano boundary is verified; Nutrient remains blocked until its private key is configured, and SerpApi/Perfect remain explicit fixtures.
+- Deployment: public fixture-labeled GitHub Pages preview completed. Devpost submission is not yet completed.
 
 The application fails honestly: if live mode is selected without a Xano API base URL, it returns an error instead of presenting fixture output as live.
 
@@ -37,7 +37,7 @@ VITE_FIXTURE_MODE=false
 VITE_XANO_API_BASE=https://your-api-group.xano.io/api:group
 ```
 
-No sponsor secret belongs in the browser bundle. Xano is the server-side orchestration boundary for Nutrient, SerpApi, and Perfect credentials. Live extraction requires Xano environment variables `NUTRIENT_API_KEY` and `BRANDPROOF_DOSSIER_URL`; neither value is checked into the repository.
+No sponsor secret belongs in the browser bundle. Xano is the server-side orchestration boundary for Nutrient, SerpApi, and Perfect credentials. Live extraction requires the Xano environment variable `NUTRIENT_API_KEY`; its value is never checked into the repository. The non-secret synthetic dossier URL is pinned in XanoScript for reproducibility.
 
 ## Verified deployment boundary
 

@@ -42,3 +42,11 @@ Live sponsor authentication, API calls, deployment, public repository publicatio
 - Added a server-side Xano function that calls Nutrient DWS `/build` against the public dossier URL and requests plain text, key-value pairs, and tables.
 - Made the live extraction path fail closed unless Nutrient returns the expected three pages and extracts both the SPF 50 marketing claim and SPF 30 laboratory claim.
 - Kept the browser's deterministic fixture mode explicit and separate; no live Nutrient call is claimed until the Xano environment is authenticated and execution evidence is captured.
+
+## August 24, 2026 — authenticated deployment boundary
+
+- Authenticated the Xano CLI to instance `x8ki-letl-twmt`, workspace `167554`.
+- Reviewed a create-only dry run, then pushed two tables, one function, one API group, and four endpoints transactionally.
+- Verified the live extraction URL returns a fail-closed `400` when the private Nutrient key is absent; no workflow row or fake live receipt is created.
+- Published the public repository and a visibly fixture-labeled GitHub Pages preview; both the preview and synthetic dossier return HTTP 200.
+- Pinned the non-secret public dossier URL in XanoScript, leaving `NUTRIENT_API_KEY` as the only requirement for the first real sponsor call.

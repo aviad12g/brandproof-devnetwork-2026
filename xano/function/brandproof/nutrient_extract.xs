@@ -3,11 +3,14 @@ function brandproof_nutrient_extract {
   input {
   }
   stack {
+    var $dossier_url {
+      value = "https://aviad12g.github.io/brandproof-devnetwork-2026/brandproof-demo-dossier.pdf"
+    }
     precondition (($env.NUTRIENT_API_KEY|strlen) > 0) {
       error_type = "inputerror"
       error = "Nutrient API key is not configured"
     }
-    precondition ($env.BRANDPROOF_DOSSIER_URL|istarts_with:"https://") {
+    precondition ($dossier_url|istarts_with:"https://") {
       error_type = "inputerror"
       error = "A public HTTPS dossier URL is required"
     }
@@ -16,7 +19,7 @@ function brandproof_nutrient_extract {
       url = "https://api.nutrient.io/build"
       method = "POST"
       params = {
-        parts: [{file: {url: $env.BRANDPROOF_DOSSIER_URL}}]
+        parts: [{file: {url: $dossier_url}}]
         output: {
           type: "json-content"
           plainText: true
