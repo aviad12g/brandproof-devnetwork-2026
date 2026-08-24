@@ -58,9 +58,13 @@ function brandproof_nutrient_extract {
       error_type = "inputerror"
       error = "Nutrient response did not contain the expected three pages"
     }
-    precondition (($product_page_json|icontains:"Luma") && ($product_page_json|icontains:"Veil") && ($product_page_json|icontains:"Skin") && ($product_page_json|icontains:"Tint")) {
+    precondition (($product_page_json|icontains:"LV-2026-004") && ($product_page_json|icontains:"Product Operations Record")) {
       error_type = "inputerror"
       error = "Nutrient response did not identify the product record"
+    }
+    precondition ($laboratory_page_json|icontains:"Luma Veil Skin Tint") {
+      error_type = "inputerror"
+      error = "Nutrient response did not identify the dossier product"
     }
     precondition (($marketing_page_json|icontains:"SPF") && ($marketing_page_json|icontains:"50")) {
       error_type = "inputerror"
