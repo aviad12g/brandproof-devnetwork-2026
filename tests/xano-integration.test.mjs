@@ -64,6 +64,10 @@ test("SerpApi integration is server-side, live, and persisted after validation",
   assert.match(providerSource, /\$serpapi_response\.response\.result/);
   assert.match(providerSource, /\$search_metadata\|get:"status":""\) == "Success"/);
   assert.match(providerSource, /\(\$shopping_results\|count\) >= 3/);
+  assert.match(providerSource, /value = \$shopping_results\|first/);
+  assert.match(providerSource, /title: \$result_0\.title/);
+  assert.match(providerSource, /value = \[\s*\$insight_0\s+\$insight_1\s+\$insight_2\s*\]/s);
+  assert.doesNotMatch(providerSource, /\$result_[012]\|get:"title"/);
   assert.doesNotMatch(providerSource, /api_key:\s*"[^"]+"/);
 
   const callIndex = endpointSource.indexOf("function.run brandproof_serpapi_market_scan");

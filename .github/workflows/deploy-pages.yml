@@ -1,4 +1,4 @@
-name: Deploy fixture-labeled preview
+name: Deploy live BrandProof preview
 
 on:
   push:
@@ -30,10 +30,11 @@ jobs:
           node-version: 22
           cache: pnpm
       - run: pnpm install --frozen-lockfile
-      - name: Build truthful preview
+      - name: Build verified live preview
         run: pnpm build
         env:
-          VITE_FIXTURE_MODE: "true"
+          VITE_FIXTURE_MODE: "false"
+          VITE_XANO_API_BASE: "https://x8ki-letl-twmt.n7.xano.io/api:brandproof-2026"
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

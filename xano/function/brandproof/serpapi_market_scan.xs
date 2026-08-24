@@ -49,15 +49,15 @@ function brandproof_serpapi_market_scan {
     }
 
     var $result_0 {
-      value = $shopping_results|get:0
+      value = $shopping_results|first
     }
     var $result_1 {
-      value = $shopping_results|get:1
+      value = ($shopping_results|slice:1:1)|first
     }
     var $result_2 {
-      value = $shopping_results|get:2
+      value = ($shopping_results|slice:2:1)|first
     }
-    precondition ((($result_0|get:"title":"")|strlen) > 0 && (($result_1|get:"title":"")|strlen) > 0 && (($result_2|get:"title":"")|strlen) > 0) {
+    precondition (($result_0.title|strlen) > 0 && ($result_1.title|strlen) > 0 && ($result_2.title|strlen) > 0) {
       error_type = "inputerror"
       error = "SerpApi results were missing product titles"
     }
@@ -65,33 +65,42 @@ function brandproof_serpapi_market_scan {
     var $evidence {
       value = [
         {
-          position: $result_0|get:"position":1
-          title: $result_0|get:"title":""
-          price: $result_0|get:"price":"Price unavailable"
-          source: $result_0|get:"source":"Source unavailable"
-          product_link: $result_0|get:"product_link":""
+          position: $result_0.position
+          title: $result_0.title
+          price: $result_0.price
+          source: $result_0.source
+          product_link: $result_0.product_link
         }
         {
-          position: $result_1|get:"position":2
-          title: $result_1|get:"title":""
-          price: $result_1|get:"price":"Price unavailable"
-          source: $result_1|get:"source":"Source unavailable"
-          product_link: $result_1|get:"product_link":""
+          position: $result_1.position
+          title: $result_1.title
+          price: $result_1.price
+          source: $result_1.source
+          product_link: $result_1.product_link
         }
         {
-          position: $result_2|get:"position":3
-          title: $result_2|get:"title":""
-          price: $result_2|get:"price":"Price unavailable"
-          source: $result_2|get:"source":"Source unavailable"
-          product_link: $result_2|get:"product_link":""
+          position: $result_2.position
+          title: $result_2.title
+          price: $result_2.price
+          source: $result_2.source
+          product_link: $result_2.product_link
         }
       ]
     }
+    var $insight_0 {
+      value = "Live result: " ~ $result_0.title ~ " — " ~ $result_0.price ~ " via " ~ $result_0.source
+    }
+    var $insight_1 {
+      value = "Live result: " ~ $result_1.title ~ " — " ~ $result_1.price ~ " via " ~ $result_1.source
+    }
+    var $insight_2 {
+      value = "Live result: " ~ $result_2.title ~ " — " ~ $result_2.price ~ " via " ~ $result_2.source
+    }
     var $insights {
       value = [
-        "Live result: " ~ ($evidence|get:0|get:"title":"") ~ " — " ~ ($evidence|get:0|get:"price":"") ~ " via " ~ ($evidence|get:0|get:"source":"")
-        "Live result: " ~ ($evidence|get:1|get:"title":"") ~ " — " ~ ($evidence|get:1|get:"price":"") ~ " via " ~ ($evidence|get:1|get:"source":"")
-        "Live result: " ~ ($evidence|get:2|get:"title":"") ~ " — " ~ ($evidence|get:2|get:"price":"") ~ " via " ~ ($evidence|get:2|get:"source":"")
+        $insight_0
+        $insight_1
+        $insight_2
       ]
     }
   }
