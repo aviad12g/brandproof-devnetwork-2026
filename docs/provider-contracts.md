@@ -1,6 +1,6 @@
 # Provider contracts
 
-This document freezes the client/backend boundary before sponsor authentication. It is an implementation contract, not evidence that any live sponsor call has succeeded.
+This document defines the client/backend boundary. Xano and Nutrient have been verified live; SerpApi and Perfect remain explicit fixtures until their provider paths are authenticated and evidenced.
 
 ## Trust boundary
 

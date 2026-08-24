@@ -50,3 +50,11 @@ Live sponsor authentication, API calls, deployment, public repository publicatio
 - Verified the live extraction URL returns a fail-closed `400` when the private Nutrient key is absent; no workflow row or fake live receipt is created.
 - Published the public repository and a visibly fixture-labeled GitHub Pages preview; both the preview and synthetic dossier return HTTP 200.
 - Pinned the non-secret public dossier URL in XanoScript, leaving `NUTRIENT_API_KEY` as the only requirement for the first real sponsor call.
+
+## August 24, 2026 — first live document workflow
+
+- Stored the Nutrient DWS credential only in Xano and made seven controlled three-page calls while correcting the response wrapper, array access, and evidence checks.
+- Used one temporary diagnostic response containing only the public synthetic dossier extraction to bind validation to the actual page structure, then removed the diagnostic payload.
+- Verified HTTP `200` with workflow ID `1`, five claims, and live Xano/Nutrient success receipts.
+- Independently queried Xano live tables and confirmed one workflow in `review` state, the five-claim extraction payload, and two persisted receipts.
+- Verified `29/50` Nutrient free-plan credits remain. SerpApi and Perfect are still fixtures and are not represented as live.

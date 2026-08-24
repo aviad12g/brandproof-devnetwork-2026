@@ -12,7 +12,7 @@ Built from scratch for the DevNetwork API + Cloud + AI Hackathon 2026. Implement
 - Workflow tests: passing.
 - Desktop and mobile visual checks: passing.
 - Local browser mode uses deterministic sponsor fixtures that are unmistakably labeled `Demo fixture`; the live Xano extraction path now requires and validates a real Nutrient DWS response.
-- Live sponsor calls: the live Xano boundary is verified; Nutrient remains blocked until its private key is configured, and SerpApi/Perfect remain explicit fixtures.
+- Live sponsor calls: Xano and Nutrient are verified end to end with persisted live receipts; SerpApi and Perfect remain explicit fixtures.
 - Deployment: public fixture-labeled GitHub Pages preview completed. Devpost submission is not yet completed.
 
 The application fails honestly: if live mode is selected without a Xano API base URL, it returns an error instead of presenting fixture output as live.
@@ -42,7 +42,7 @@ No sponsor secret belongs in the browser bundle. Xano is the server-side orchest
 ## Verified deployment boundary
 
 - The Xano schema and API definitions are deployed to workspace `167554` at `https://x8ki-letl-twmt.n7.xano.io/api:brandproof-2026`.
-- A live extraction request currently fails closed until a private Nutrient key is configured; this is intentional and must not be represented as a successful sponsor call.
+- A live extraction request returned workflow ID `1`, five claims, and persisted Xano/Nutrient success receipts. The server-side key remains secret and is not present in this repository.
 - The GitHub Pages workflow publishes only the visibly labeled deterministic fixture preview. It will switch to live mode only after the live sponsor path is verified end to end.
 
 ## Governed flow
@@ -56,7 +56,7 @@ No sponsor secret belongs in the browser bundle. Xano is the server-side orchest
 
 ## Architecture
 
-The React/Vite client renders workflow state and calls four Xano endpoints. Xano will own the authoritative workflow, provider credentials, sponsor calls, audit receipts, and timeouts. See [docs/provider-contracts.md](docs/provider-contracts.md) for the human-readable contract and [docs/openapi.yaml](docs/openapi.yaml) for its machine-readable form.
+The React/Vite client renders workflow state and calls four Xano endpoints. Xano owns the authoritative workflow, provider credentials, sponsor calls, audit receipts, and timeouts. See [docs/provider-contracts.md](docs/provider-contracts.md) for the human-readable contract and [docs/openapi.yaml](docs/openapi.yaml) for its machine-readable form.
 
 ## Verification
 
@@ -75,4 +75,4 @@ The unit suite proves that out-of-order transitions and unsupported approval val
 - A human must resolve material claim conflicts.
 - Provider keys remain server-side.
 - Paid or irreversible provider actions require a separate confirmation gate.
-- No live sponsor API call or completed submission is claimed in this repository until corresponding evidence exists.
+- Live claims are made only when corresponding response and persistence evidence exists; no completed submission is claimed yet.
