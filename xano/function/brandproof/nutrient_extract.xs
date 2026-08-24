@@ -45,13 +45,13 @@ function brandproof_nutrient_extract {
       value = $nutrient_body|get:"pages":[]
     }
     var $product_page {
-      value = $pages|get:"0.plainText":""
+      value = $pages|get:0|get:"plainText":""
     }
     var $marketing_page {
-      value = $pages|get:"1.plainText":""
+      value = $pages|get:1|get:"plainText":""
     }
     var $laboratory_page {
-      value = $pages|get:"2.plainText":""
+      value = $pages|get:2|get:"plainText":""
     }
 
     precondition (($pages|count) == 3) {

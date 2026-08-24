@@ -17,6 +17,10 @@ test("Nutrient integration is server-side, live, and fail-closed", async () => {
   assert.match(source, /\$nutrient_response\.response\.status == 200/);
   assert.match(source, /\$nutrient_response\.response\.result/);
   assert.doesNotMatch(source, /\$nutrient_response\|get:"pages"/);
+  assert.match(source, /\$pages\|get:0\|get:"plainText":""/);
+  assert.match(source, /\$pages\|get:1\|get:"plainText":""/);
+  assert.match(source, /\$pages\|get:2\|get:"plainText":""/);
+  assert.doesNotMatch(source, /get:"[012]\.plainText"/);
   assert.match(source, /\(\$pages\|count\) == 3/);
   assert.match(source, /icontains:"SPF 50"/);
   assert.match(source, /icontains:"SPF 30"/);
