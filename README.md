@@ -12,7 +12,7 @@ Built from scratch for the DevNetwork API + Cloud + AI Hackathon 2026. Implement
 - Workflow tests: passing.
 - Desktop and mobile visual checks: passing.
 - Local development defaults to deterministic sponsor fixtures that are unmistakably labeled `Demo fixture`; the production build is configured for live Xano orchestration.
-- Live sponsor calls: Nutrient, SerpApi, Perfect, and Xano are verified end to end. Corrected validation workflow `3` reached `ready` with three populated market evidence items, seven persisted live success receipts, and an HTTPS Perfect result.
+- Live sponsor calls: Nutrient, SerpApi, Perfect, and Xano are verified end to end. Corrected validation workflow `3` reached `ready`; public browser workflows `4` and `5` independently reproduced the same governed path with three populated market evidence items, seven live success receipts, and an HTTPS Perfect result.
 - Deployment: GitHub Pages is configured to build the verified live workflow. Devpost submission is not yet completed.
 
 The application fails honestly: if live mode is selected without a Xano API base URL, it returns an error instead of presenting fixture output as live.
@@ -43,7 +43,7 @@ No sponsor secret belongs in the browser bundle. Xano is the server-side orchest
 
 - The Xano schema and API definitions are deployed to workspace `167554` at `https://x8ki-letl-twmt.n7.xano.io/api:brandproof-2026`.
 - A live extraction request returned workflow ID `1`, five claims, and persisted Xano/Nutrient success receipts. The server-side key remains secret and is not present in this repository.
-- The synthetic evidence conflict was resolved to the laboratory-supported SPF 30 claim. Corrected live workflow `3` then completed the market and experience gates and is persisted at `ready`.
+- The synthetic evidence conflict was resolved to the laboratory-supported SPF 30 claim. Corrected live workflows `3`, `4`, and `5` then completed the market and experience gates and reached `ready`.
 - SerpApi email and phone verification are complete on the free 250-search plan. The live market endpoint persisted validated SerpApi and Xano success receipts.
 - The Perfect `APIWORLD` redemption supplied 1,000 free units. A live AI Look task completed against the fictional 800×800 demo portrait and persisted Perfect and Xano success receipts.
 - The GitHub Pages workflow builds against the non-secret live Xano API base; all provider credentials remain server-side.
@@ -70,6 +70,15 @@ pnpm build
 ```
 
 The unit suite proves that out-of-order transitions and unsupported approval values cannot bypass the publication gate. Browser QA covers the complete workflow on desktop, the responsive mobile layout, and an empty console.
+
+## Live evidence
+
+- [Intake](docs/screenshots/brandproof-live-01-intake.png)
+- [Human evidence-review gate](docs/screenshots/brandproof-live-02-evidence-review.png)
+- [Live market context](docs/screenshots/brandproof-live-03-market.png)
+- [Completed workflow and receipts](docs/screenshots/brandproof-live-04-ready.png)
+
+These captures were taken from the public GitHub Pages deployment while running live workflow `5`; they are not fixture renders.
 
 ## Safety and truthfulness
 
