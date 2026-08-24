@@ -22,6 +22,11 @@ test("Nutrient integration is server-side, live, and fail-closed", async () => {
   assert.match(source, /\$pages\|get:2\|get:"plainText":""/);
   assert.doesNotMatch(source, /get:"[012]\.plainText"/);
   assert.match(source, /\(\$pages\|count\) == 3/);
+  assert.match(source, /icontains:"Luma"/);
+  assert.match(source, /icontains:"Veil"/);
+  assert.match(source, /icontains:"Skin"/);
+  assert.match(source, /icontains:"Tint"/);
+  assert.doesNotMatch(source, /icontains:"Luma Veil Skin Tint"/);
   assert.match(source, /icontains:"SPF 50"/);
   assert.match(source, /icontains:"SPF 30"/);
   assert.doesNotMatch(source, /Bearer\s+(?!%s)[A-Za-z0-9_-]{20,}/);

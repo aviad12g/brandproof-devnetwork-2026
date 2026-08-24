@@ -58,7 +58,7 @@ function brandproof_nutrient_extract {
       error_type = "inputerror"
       error = "Nutrient response did not contain the expected three pages"
     }
-    precondition ($product_page|icontains:"Luma Veil Skin Tint") {
+    precondition (($product_page|icontains:"Luma") && ($product_page|icontains:"Veil") && ($product_page|icontains:"Skin") && ($product_page|icontains:"Tint")) {
       error_type = "inputerror"
       error = "Nutrient response did not identify the product record"
     }
