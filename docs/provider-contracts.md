@@ -1,6 +1,6 @@
 # Provider contracts
 
-This document defines the client/backend boundary. Xano and Nutrient have been verified live; SerpApi and Perfect remain explicit fixtures until their provider paths are authenticated and evidenced.
+This document defines the client/backend boundary. Xano and Nutrient have been verified live. SerpApi and Perfect server paths are deployed fail-closed, while the public preview remains explicitly fixture-labeled until those providers are authenticated and evidenced.
 
 ## Trust boundary
 
@@ -45,9 +45,13 @@ The backend must reject the decision if extraction is incomplete, the value is n
 
 Requires the material conflict to be resolved. It returns source-preserving market insights and Xano/SerpApi receipts. Search data may inform human review but must not overwrite the verified product record.
 
+Live Xano requires `SERPAPI_API_KEY`. The backend calls Google Shopping through SerpApi, verifies successful search metadata and at least three titled results, and persists provider receipts only after validation.
+
 ### `POST /brandproof/try-on`
 
 Requires completed evidence and market gates. It configures the supported Perfect experience and returns Xano/Perfect receipts. Images and session identifiers must follow the provider's published retention and consent requirements.
+
+Live Xano requires `PERFECT_API_KEY`. The backend lists valid AI Look templates, creates a task against the public fictional demo portrait, polls to a terminal state, and persists the task ID and result only after Perfect returns `success` plus an HTTPS render URL.
 
 ## Failure semantics
 

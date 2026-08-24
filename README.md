@@ -12,7 +12,7 @@ Built from scratch for the DevNetwork API + Cloud + AI Hackathon 2026. Implement
 - Workflow tests: passing.
 - Desktop and mobile visual checks: passing.
 - Local browser mode uses deterministic sponsor fixtures that are unmistakably labeled `Demo fixture`; the live Xano extraction path now requires and validates a real Nutrient DWS response.
-- Live sponsor calls: Xano and Nutrient are verified end to end with persisted live receipts; SerpApi and Perfect remain explicit fixtures.
+- Live sponsor calls: Xano and Nutrient are verified end to end with persisted live receipts. Server-side SerpApi and Perfect paths are deployed fail-closed and await private credentials; the public frontend remains explicitly fixture-labeled.
 - Deployment: public fixture-labeled GitHub Pages preview completed. Devpost submission is not yet completed.
 
 The application fails honestly: if live mode is selected without a Xano API base URL, it returns an error instead of presenting fixture output as live.
@@ -37,12 +37,15 @@ VITE_FIXTURE_MODE=false
 VITE_XANO_API_BASE=https://your-api-group.xano.io/api:group
 ```
 
-No sponsor secret belongs in the browser bundle. Xano is the server-side orchestration boundary for Nutrient, SerpApi, and Perfect credentials. Live extraction requires the Xano environment variable `NUTRIENT_API_KEY`; its value is never checked into the repository. The non-secret synthetic dossier URL is pinned in XanoScript for reproducibility.
+No sponsor secret belongs in the browser bundle. Xano is the server-side orchestration boundary for Nutrient, SerpApi, and Perfect credentials. Live paths use Xano environment variables `NUTRIENT_API_KEY`, `SERPAPI_API_KEY`, and `PERFECT_API_KEY`; their values are never checked into the repository. The non-secret synthetic dossier and fictional try-on portrait URLs are pinned in XanoScript for reproducibility.
 
 ## Verified deployment boundary
 
 - The Xano schema and API definitions are deployed to workspace `167554` at `https://x8ki-letl-twmt.n7.xano.io/api:brandproof-2026`.
 - A live extraction request returned workflow ID `1`, five claims, and persisted Xano/Nutrient success receipts. The server-side key remains secret and is not present in this repository.
+- The synthetic evidence conflict was resolved to the laboratory-supported SPF 30 claim; workflow `1` is persisted at the market gate.
+- SerpApi email verification is complete, but phone verification is still required before a key can be issued. The live market endpoint returns a truthful missing-key error and creates no market receipt.
+- The Perfect AI Look task path, bounded polling, and generated fictional 800×800 demo portrait are deployed; no Perfect live call or receipt is claimed before account setup and a key are complete.
 - The GitHub Pages workflow publishes only the visibly labeled deterministic fixture preview. It will switch to live mode only after the live sponsor path is verified end to end.
 
 ## Governed flow

@@ -58,3 +58,11 @@ Live sponsor authentication, API calls, deployment, public repository publicatio
 - Verified HTTP `200` with workflow ID `1`, five claims, and live Xano/Nutrient success receipts.
 - Independently queried Xano live tables and confirmed one workflow in `review` state, the five-claim extraction payload, and two persisted receipts.
 - Verified `29/50` Nutrient free-plan credits remain. SerpApi and Perfect are still fixtures and are not represented as live.
+
+## August 24, 2026 — remaining sponsor paths prepared
+
+- Verified the SerpApi account email, then stopped at its required phone-number and 6-digit-code gate. Implemented and deployed a server-side Google Shopping function and market endpoint; the missing-key test returned `400` and created no market receipt.
+- Resolved the synthetic evidence conflict to the laboratory-supported SPF 30 value. Xano now persists workflow `1` in `market` state plus a live review receipt.
+- Generated a completely fictional, permission-safe 800×800 portrait for Perfect Corp, published it with the fixture preview, and verified the public JPEG returns HTTP `200`.
+- Implemented and deployed a Perfect AI Look flow that lists templates, creates a task, polls to a terminal state, and rejects anything except a successful HTTPS render.
+- Seven tests, all ten XanoScript files, the production build, CI, and Pages pass. SerpApi and Perfect are not claimed live until their credentials and provider responses are verified.
