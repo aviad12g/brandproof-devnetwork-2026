@@ -34,8 +34,15 @@ function brandproof_nutrient_extract {
       timeout = 30
     } as $nutrient_response
 
+    precondition ($nutrient_response.response.status == 200) {
+      error_type = "inputerror"
+      error = "Nutrient extraction request failed"
+    }
+    var $nutrient_body {
+      value = $nutrient_response.response.result
+    }
     var $pages {
-      value = $nutrient_response|get:"pages":[]
+      value = $nutrient_body|get:"pages":[]
     }
     var $product_page {
       value = $pages|get:"0.plainText":""

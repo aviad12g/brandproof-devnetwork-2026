@@ -14,6 +14,9 @@ test("Nutrient integration is server-side, live, and fail-closed", async () => {
   assert.match(source, /\$env\.NUTRIENT_API_KEY/);
   assert.match(source, /https:\/\/aviad12g\.github\.io\/brandproof-devnetwork-2026\/brandproof-demo-dossier\.pdf/);
   assert.doesNotMatch(source, /\$env\.BRANDPROOF_DOSSIER_URL/);
+  assert.match(source, /\$nutrient_response\.response\.status == 200/);
+  assert.match(source, /\$nutrient_response\.response\.result/);
+  assert.doesNotMatch(source, /\$nutrient_response\|get:"pages"/);
   assert.match(source, /\(\$pages\|count\) == 3/);
   assert.match(source, /icontains:"SPF 50"/);
   assert.match(source, /icontains:"SPF 30"/);
