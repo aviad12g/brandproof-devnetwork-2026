@@ -1,0 +1,202 @@
+openapi: 3.1.0
+info:
+  title: BrandProof Xano API
+  version: 0.1.0
+  description: >-
+    Frozen client/backend contract for the hackathon build. This specification
+    does not claim that the endpoints have been deployed or called live.
+servers:
+  - url: https://example.invalid/api:brandproof
+    description: Placeholder only; replace after a verified Xano deployment.
+paths:
+  /brandproof/extract:
+    post:
+      operationId: extractDossier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [dossier]
+              properties:
+                dossier:
+                  const: luma-veil-demo
+      responses:
+        "200":
+          description: Source-grounded product claims and provider receipts.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ExtractionResult"
+        "422":
+          $ref: "#/components/responses/ProviderValidationFailure"
+        "502":
+          $ref: "#/components/responses/ProviderFailure"
+  /brandproof/review:
+    post:
+      operationId: resolveConflict
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required: [workflowId, field, approvedValue, reason]
+              properties:
+                workflowId:
+                  type: integer
+                  minimum: 1
+                field:
+                  const: spf
+                approvedValue:
+                  enum: [30, 50]
+                reason:
+                  type: string
+                  minLength: 1
+                  maxLength: 500
+      responses:
+        "200":
+          description: Human decision recorded.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Receipt"
+        "409":
+          description: Extraction is incomplete or the value is not in the evidence set.
+  /brandproof/market-scan:
+    post:
+      operationId: scanMarket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkflowRequest"
+      responses:
+        "200":
+          description: Reviewable market insights that do not modify certified claims.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: false
+                required: [insights, receipts]
+                properties:
+                  insights:
+                    type: array
+                    maxItems: 10
+                    items:
+                      type: string
+                  receipts:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Receipt"
+        "409":
+          description: Material evidence conflict remains unresolved.
+        "502":
+          $ref: "#/components/responses/ProviderFailure"
+  /brandproof/try-on:
+    post:
+      operationId: configureTryOn
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/WorkflowRequest"
+      responses:
+        "200":
+          description: Perfect Corp experience configured after prior gates pass.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Receipt"
+        "409":
+          description: Evidence or market gate is incomplete.
+        "502":
+          $ref: "#/components/responses/ProviderFailure"
+components:
+  schemas:
+    WorkflowRequest:
+      type: object
+      additionalProperties: false
+      required: [workflowId]
+      properties:
+        workflowId:
+          type: integer
+          minimum: 1
+    Receipt:
+      type: object
+      additionalProperties: false
+      required: [provider, operation, mode, status, timestamp]
+      properties:
+        provider:
+          enum: [xano, nutrient, serpapi, perfect]
+        operation:
+          type: string
+          minLength: 1
+        mode:
+          enum: [live, fixture, unavailable]
+        status:
+          enum: [success, blocked, pending]
+        resourceId:
+          type: string
+        durationMs:
+          type: integer
+          minimum: 0
+        timestamp:
+          type: string
+          format: date-time
+    Claim:
+      type: object
+      additionalProperties: false
+      required: [field, value, confidence, source, page, status]
+      properties:
+        field:
+          type: string
+        value:
+          type: string
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        source:
+          type: string
+        page:
+          type: integer
+          minimum: 1
+        status:
+          enum: [verified, conflict]
+    ExtractionResult:
+      type: object
+      additionalProperties: false
+      required: [workflowId, productName, category, shade, claims, receipts]
+      properties:
+        workflowId:
+          type: integer
+          minimum: 1
+        productName:
+          type: string
+        category:
+          type: string
+        shade:
+          type: string
+        claims:
+          type: array
+          minItems: 1
+          items:
+            $ref: "#/components/schemas/Claim"
+        receipts:
+          type: array
+          items:
+            $ref: "#/components/schemas/Receipt"
+  responses:
+    ProviderValidationFailure:
+      description: Sponsor response could not be validated against the contract.
+    ProviderFailure:
+      description: Sponsor call failed or timed out; live mode must not fall back to fixtures.
