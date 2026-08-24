@@ -73,6 +73,7 @@ The unit suite proves that out-of-order transitions and unsupported approval val
 
 ## Live evidence
 
+- [2:02 master demo video](https://aviad12g.github.io/brandproof-devnetwork-2026/brandproof-demo-master-v1.mp4)
 - [Intake](docs/screenshots/brandproof-live-01-intake.png)
 - [Human evidence-review gate](docs/screenshots/brandproof-live-02-evidence-review.png)
 - [Live market context](docs/screenshots/brandproof-live-03-market.png)
