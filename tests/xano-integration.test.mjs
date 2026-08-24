@@ -5,8 +5,10 @@ import test from "node:test";
 
 const nutrientFunctionPath = new URL("../xano/function/brandproof/nutrient_extract.xs", import.meta.url);
 const serpapiFunctionPath = new URL("../xano/function/brandproof/serpapi_market_scan.xs", import.meta.url);
+const perfectFunctionPath = new URL("../xano/function/brandproof/perfect_look_vto.xs", import.meta.url);
 const extractionEndpointPath = new URL("../xano/api/brandproof/brandproof_extract_post.xs", import.meta.url);
 const marketEndpointPath = new URL("../xano/api/brandproof/brandproof_market_scan_post.xs", import.meta.url);
+const tryOnEndpointPath = new URL("../xano/api/brandproof/brandproof_try_on_post.xs", import.meta.url);
 
 
 test("Nutrient integration is server-side, live, and fail-closed", async () => {
@@ -70,5 +72,29 @@ test("SerpApi integration is server-side, live, and persisted after validation",
   assert.ok(liveReceiptIndex > callIndex, "live receipt must be created after the provider call");
   assert.match(endpointSource, /operation: "google_shopping\.search", mode: "live"/);
   assert.doesNotMatch(endpointSource, /serpapi_fixture_market/);
+  assert.doesNotMatch(endpointSource, /mode: "fixture"/);
+});
+
+
+test("Perfect Corp integration creates and verifies a live try-on task", async () => {
+  const [providerSource, endpointSource] = await Promise.all([
+    readFile(perfectFunctionPath, "utf8"),
+    readFile(tryOnEndpointPath, "utf8"),
+  ]);
+
+  assert.match(providerSource, /https:\/\/yce-api-01\.makeupar\.com\/s2s\/v2\.0\/task\/template\/look-vto/);
+  assert.match(providerSource, /https:\/\/yce-api-01\.makeupar\.com\/s2s\/v2\.0\/task\/look-vto/);
+  assert.match(providerSource, /perfect-demo-face\.jpg/);
+  assert.match(providerSource, /\$env\.PERFECT_API_KEY/);
+  assert.match(providerSource, /\$task_status == "success"/);
+  assert.match(providerSource, /\$result_url\|istarts_with:"https:\/\/"/);
+  assert.doesNotMatch(providerSource, /Bearer\s+(?!%s)[A-Za-z0-9_-]{20,}/);
+
+  const callIndex = endpointSource.indexOf("function.run brandproof_perfect_look_vto");
+  const liveReceiptIndex = endpointSource.indexOf('provider: "perfect"');
+  assert.ok(callIndex >= 0, "live Perfect function must be called");
+  assert.ok(liveReceiptIndex > callIndex, "live receipt must be created after task completion");
+  assert.match(endpointSource, /operation: "look_vto\.task", mode: "live"/);
+  assert.doesNotMatch(endpointSource, /perfect_fixture_session/);
   assert.doesNotMatch(endpointSource, /mode: "fixture"/);
 });

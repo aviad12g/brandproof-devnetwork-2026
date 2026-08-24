@@ -26,6 +26,14 @@ export type ExtractionResult = {
   receipts: ApiReceipt[];
 };
 
+export type TryOnResult = {
+  resultUrl: string;
+  sourceImageUrl: string;
+  templateId: string;
+  templateTitle: string;
+  receipts: ApiReceipt[];
+};
+
 const API_BASE = (import.meta.env.VITE_XANO_API_BASE ?? "").replace(/\/$/, "");
 export const fixtureMode = import.meta.env.VITE_FIXTURE_MODE !== "false" || !API_BASE;
 let activeWorkflowId: number | null = null;
@@ -47,7 +55,7 @@ function receipt(provider: ApiReceipt["provider"], operation: string, mode: Prov
 async function xanoRequest<T>(path: string, init: RequestInit = {}): Promise<T> {
   if (!API_BASE) throw new Error("Xano API base URL is not configured.");
   const controller = new AbortController();
-  const timeout = window.setTimeout(() => controller.abort(), 15_000);
+  const timeout = window.setTimeout(() => controller.abort(), 45_000);
   try {
     const response = await fetch(`${API_BASE}${path}`, {
       ...init,
@@ -121,14 +129,20 @@ export async function scanMarket(): Promise<{ insights: string[]; receipts: ApiR
   };
 }
 
-export async function configureTryOn(): Promise<ApiReceipt[]> {
+export async function configureTryOn(): Promise<TryOnResult> {
   if (!fixtureMode) {
     if (!activeWorkflowId) throw new Error("Start the Xano workflow before configuring try-on.");
     return xanoRequest("/brandproof/try-on", { method: "POST", body: JSON.stringify({ workflowId: activeWorkflowId }) });
   }
   await wait(650);
-  return [
-    receipt("xano", "experience.configure", "fixture"),
-    receipt("perfect", "try_on.session", "fixture"),
-  ];
+  return {
+    resultUrl: "./perfect-demo-face.jpg",
+    sourceImageUrl: "./perfect-demo-face.jpg",
+    templateId: "fixture-neutral-look",
+    templateTitle: "Fixture neutral look",
+    receipts: [
+      receipt("xano", "experience.configure", "fixture"),
+      receipt("perfect", "look_vto.task", "fixture"),
+    ],
+  };
 }

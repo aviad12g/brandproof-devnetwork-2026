@@ -1,6 +1,6 @@
 query "brandproof/try-on" verb=POST {
   api_group = "BrandProof"
-  description = "Complete the governed workflow while Perfect remains explicitly fixture-backed"
+  description = "Create and persist a live Perfect Corp AI Look virtual try-on"
   input {
     int workflowId filters=min:1
   }
@@ -15,23 +15,49 @@ query "brandproof/try-on" verb=POST {
       error = "Complete market review before configuring try-on"
     }
 
+    function.run brandproof_perfect_look_vto {
+      input = {}
+    } as $tryon
+
     db.edit "brandproof_workflow" {
       field_name = "id"
       field_value = $workflow.id
-      data = {status: "ready", tryon_json: {shade: "Sunlit 04", mode: "fixture"}, updated_at: now}
+      data = {
+        status: "ready"
+        tryon_json: {
+          shade: "Sunlit 04"
+          mode: "live"
+          task_id: $tryon.taskId
+          task_status: $tryon.taskStatus
+          template_id: $tryon.templateId
+          template_title: $tryon.templateTitle
+          source_image_url: $tryon.sourceImageUrl
+          result_url: $tryon.resultUrl
+        }
+        updated_at: now
+      }
     } as $updated_workflow
 
     var $xano_receipt {
       value = {provider: "xano", operation: "experience.configure", mode: "live", status: "success", resourceId: "xano_experience_" ~ ($workflow.id|to_text), timestamp: now}
     }
     var $perfect_receipt {
-      value = {provider: "perfect", operation: "try_on.session", mode: "fixture", status: "success", resourceId: "perfect_fixture_session", timestamp: now}
+      value = {provider: "perfect", operation: "look_vto.task", mode: "live", status: "success", resourceId: $tryon.taskId, timestamp: now}
     }
 
     db.add "brandproof_receipt" {
-      data = {workflow_id: $workflow.id, provider: "xano", operation: "experience.configure", mode: "live", status: "success", resource_id: $xano_receipt.resourceId, metadata: {provider_mode: "fixture"}}
-    } as $receipt_row
+      data = {workflow_id: $workflow.id, provider: "perfect", operation: "look_vto.task", mode: "live", status: "success", resource_id: $tryon.taskId, metadata: {template_id: $tryon.templateId, template_title: $tryon.templateTitle, task_status: $tryon.taskStatus}}
+    } as $perfect_receipt_row
+    db.add "brandproof_receipt" {
+      data = {workflow_id: $workflow.id, provider: "xano", operation: "experience.configure", mode: "live", status: "success", resource_id: $xano_receipt.resourceId, metadata: {provider_mode: "live", perfect_task_id: $tryon.taskId}}
+    } as $xano_receipt_row
   }
-  response = [$xano_receipt, $perfect_receipt]
+  response = {
+    resultUrl: $tryon.resultUrl
+    sourceImageUrl: $tryon.sourceImageUrl
+    templateId: $tryon.templateId
+    templateTitle: $tryon.templateTitle
+    receipts: [$xano_receipt, $perfect_receipt]
+  }
   guid = "bZ18TmCHRNvWnr2UrlUdNuVcp58"
 }

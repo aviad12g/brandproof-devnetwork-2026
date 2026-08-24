@@ -70,6 +70,7 @@ export default function App() {
   const [extraction, setExtraction] = useState<ExtractionResult | null>(null);
   const [receipts, setReceipts] = useState<ApiReceipt[]>([]);
   const [insights, setInsights] = useState<string[]>([]);
+  const [tryOnResultUrl, setTryOnResultUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const progress = readiness(workflow);
 
@@ -130,8 +131,9 @@ export default function App() {
     setBusy("experience");
     setError(null);
     try {
-      const newReceipts = await configureTryOn();
-      setReceipts((current) => [...current, ...newReceipts]);
+      const result = await configureTryOn();
+      setTryOnResultUrl(result.resultUrl);
+      setReceipts((current) => [...current, ...result.receipts]);
       dispatch({ type: "CONFIGURE_TRY_ON" });
     } catch (reason) {
       setError(reason instanceof Error ? reason.message : "Try-on setup failed.");
@@ -145,6 +147,7 @@ export default function App() {
     setExtraction(null);
     setReceipts([]);
     setInsights([]);
+    setTryOnResultUrl(null);
     setError(null);
   }
 
@@ -286,8 +289,8 @@ export default function App() {
             <h3>Try the verified shade.</h3>
             <p>The Perfect Corp experience is configured only after the source record and current market context pass review.</p>
             <div className="tryon-preview">
-              <div className="face-art"><span className="face-eye left"/><span className="face-eye right"/><span className="face-mouth"/><i /></div>
-              <div className="tryon-controls"><span>Sunlit 04</span><div><i/><i/><i className="selected"/><i/><i/></div><small>{workflow.tryOnConfigured ? "Session configured" : "Preview locked"}</small></div>
+              {tryOnResultUrl ? <img className="tryon-image" src={tryOnResultUrl} alt="Synthetic Perfect Corp virtual try-on result" /> : <div className="face-art"><span className="face-eye left"/><span className="face-eye right"/><span className="face-mouth"/><i /></div>}
+              <div className="tryon-controls"><span>Sunlit 04</span><div><i/><i/><i className="selected"/><i/><i/></div><small>{workflow.tryOnConfigured ? "Rendered with receipt" : "Preview locked"}</small></div>
             </div>
             <button className="secondary-button light" onClick={activateExperience} disabled={busy !== null || !workflow.marketScanComplete || workflow.tryOnConfigured}>{busy === "experience" ? "Configuring experience…" : workflow.tryOnConfigured ? "Try-on configured" : "Configure try-on"}<Icon name={workflow.tryOnConfigured ? "check" : "arrow"} /></button>
           </div>
