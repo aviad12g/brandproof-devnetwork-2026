@@ -4,7 +4,9 @@ import test from "node:test";
 
 
 const nutrientFunctionPath = new URL("../xano/function/brandproof/nutrient_extract.xs", import.meta.url);
+const serpapiFunctionPath = new URL("../xano/function/brandproof/serpapi_market_scan.xs", import.meta.url);
 const extractionEndpointPath = new URL("../xano/api/brandproof/brandproof_extract_post.xs", import.meta.url);
+const marketEndpointPath = new URL("../xano/api/brandproof/brandproof_market_scan_post.xs", import.meta.url);
 
 
 test("Nutrient integration is server-side, live, and fail-closed", async () => {
@@ -44,4 +46,29 @@ test("extraction endpoint records Nutrient only after the live function returns"
   assert.ok(liveReceiptIndex > callIndex, "live receipt must be created after the provider call");
   assert.match(source, /operation: "document\.extract",\s*mode: "live"/s);
   assert.doesNotMatch(source, /nutrient_fixture_dossier/);
+});
+
+
+test("SerpApi integration is server-side, live, and persisted after validation", async () => {
+  const [providerSource, endpointSource] = await Promise.all([
+    readFile(serpapiFunctionPath, "utf8"),
+    readFile(marketEndpointPath, "utf8"),
+  ]);
+
+  assert.match(providerSource, /https:\/\/serpapi\.com\/search\.json/);
+  assert.match(providerSource, /engine: "google_shopping"/);
+  assert.match(providerSource, /\$env\.SERPAPI_API_KEY/);
+  assert.match(providerSource, /\$serpapi_response\.response\.status == 200/);
+  assert.match(providerSource, /\$serpapi_response\.response\.result/);
+  assert.match(providerSource, /\$search_metadata\|get:"status":""\) == "Success"/);
+  assert.match(providerSource, /\(\$shopping_results\|count\) >= 3/);
+  assert.doesNotMatch(providerSource, /api_key:\s*"[^"]+"/);
+
+  const callIndex = endpointSource.indexOf("function.run brandproof_serpapi_market_scan");
+  const liveReceiptIndex = endpointSource.indexOf('provider: "serpapi"');
+  assert.ok(callIndex >= 0, "live SerpApi function must be called");
+  assert.ok(liveReceiptIndex > callIndex, "live receipt must be created after the provider call");
+  assert.match(endpointSource, /operation: "google_shopping\.search", mode: "live"/);
+  assert.doesNotMatch(endpointSource, /serpapi_fixture_market/);
+  assert.doesNotMatch(endpointSource, /mode: "fixture"/);
 });
