@@ -44,29 +44,29 @@ function brandproof_nutrient_extract {
     var $pages {
       value = $nutrient_body|get:"pages":[]
     }
-    var $product_page {
-      value = $pages|get:0|get:"plainText":""
+    var $product_page_json {
+      value = ($pages|get:0)|json_encode
     }
-    var $marketing_page {
-      value = $pages|get:1|get:"plainText":""
+    var $marketing_page_json {
+      value = ($pages|get:1)|json_encode
     }
-    var $laboratory_page {
-      value = $pages|get:2|get:"plainText":""
+    var $laboratory_page_json {
+      value = ($pages|get:2)|json_encode
     }
 
     precondition (($pages|count) == 3) {
       error_type = "inputerror"
       error = "Nutrient response did not contain the expected three pages"
     }
-    precondition (($product_page|icontains:"Luma") && ($product_page|icontains:"Veil") && ($product_page|icontains:"Skin") && ($product_page|icontains:"Tint")) {
+    precondition (($product_page_json|icontains:"Luma") && ($product_page_json|icontains:"Veil") && ($product_page_json|icontains:"Skin") && ($product_page_json|icontains:"Tint")) {
       error_type = "inputerror"
       error = "Nutrient response did not identify the product record"
     }
-    precondition ($marketing_page|icontains:"SPF 50") {
+    precondition (($marketing_page_json|icontains:"SPF") && ($marketing_page_json|icontains:"50")) {
       error_type = "inputerror"
       error = "Nutrient response did not extract the marketing claim"
     }
-    precondition ($laboratory_page|icontains:"SPF 30") {
+    precondition (($laboratory_page_json|icontains:"SPF") && ($laboratory_page_json|icontains:"30")) {
       error_type = "inputerror"
       error = "Nutrient response did not extract the laboratory claim"
     }

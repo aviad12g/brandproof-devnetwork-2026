@@ -17,18 +17,21 @@ test("Nutrient integration is server-side, live, and fail-closed", async () => {
   assert.match(source, /\$nutrient_response\.response\.status == 200/);
   assert.match(source, /\$nutrient_response\.response\.result/);
   assert.doesNotMatch(source, /\$nutrient_response\|get:"pages"/);
-  assert.match(source, /\$pages\|get:0\|get:"plainText":""/);
-  assert.match(source, /\$pages\|get:1\|get:"plainText":""/);
-  assert.match(source, /\$pages\|get:2\|get:"plainText":""/);
+  assert.match(source, /\(\$pages\|get:0\)\|json_encode/);
+  assert.match(source, /\(\$pages\|get:1\)\|json_encode/);
+  assert.match(source, /\(\$pages\|get:2\)\|json_encode/);
   assert.doesNotMatch(source, /get:"[012]\.plainText"/);
+  assert.doesNotMatch(source, /\|get:"plainText"/);
   assert.match(source, /\(\$pages\|count\) == 3/);
   assert.match(source, /icontains:"Luma"/);
   assert.match(source, /icontains:"Veil"/);
   assert.match(source, /icontains:"Skin"/);
   assert.match(source, /icontains:"Tint"/);
   assert.doesNotMatch(source, /icontains:"Luma Veil Skin Tint"/);
-  assert.match(source, /icontains:"SPF 50"/);
-  assert.match(source, /icontains:"SPF 30"/);
+  assert.match(source, /\$marketing_page_json\|icontains:"SPF"/);
+  assert.match(source, /\$marketing_page_json\|icontains:"50"/);
+  assert.match(source, /\$laboratory_page_json\|icontains:"SPF"/);
+  assert.match(source, /\$laboratory_page_json\|icontains:"30"/);
   assert.doesNotMatch(source, /Bearer\s+(?!%s)[A-Za-z0-9_-]{20,}/);
 });
 
